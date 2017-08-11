@@ -26,13 +26,11 @@ mongo.MongoClient.connect(db_url,(err,db)=>{
 app.get('/todos',(req,res)=>{
 
 
-mongo.MongoClient.connect(db_url,(err,db)=>{
- db.collection('todos').find({},(err,result)=>{
-io.emit('alltodos',result);
+mongo.connect(db_url,(err,db)=>{
+ db.collection('todos').find().sort({}).toArray((err,result)=>{
 
-res.writeHead(200 , {"Content-Type": "application/json"});
 
-res.end(JSON.stringify(result));
+res.send(JSON.stringify(result));
 
 
 });
@@ -43,8 +41,31 @@ res.end(JSON.stringify(result));
 io.sockets.on('connection',(socket)=>{
 
 
+socket.on('delete',(id)=>{
+mongo.connect(db_url,(err,db)=>{
+	db.collection("todos").deleteMany(id,(err,obj)=>{
 
 
+app.get('/todos',(req,res)=>{
+
+
+mongo.connect(db_url,(err,db)=>{
+ db.collection('todos').find().sort({}).toArray((err,result)=>{
+
+
+res.send(JSON.stringify(result));
+
+
+});
+ });
+});
+
+
+	});
+});
+
+io.emit('deleted');
+});
 
 
 
@@ -61,8 +82,31 @@ db.collection('todos').insertOne(myobj,(err,res)=>{
 	console.log('todo is inserted');
 });
  
- db.collection('todos').find({},(err,result)=>{
- console.log(result);
+
+
+app.get('/todos',(req,res)=>{
+
+
+mongo.connect(db_url,(err,db)=>{
+ db.collection('todos').find().sort({}).toArray((err,result)=>{
+
+
+res.send(JSON.stringify(result));
+
+
+});
+ });
+});
+
+
+io.emit('deleted');
+
+
+
+
+
+
+
  
  });
 
@@ -71,8 +115,6 @@ db.collection('todos').insertOne(myobj,(err,res)=>{
 
 
 	});
-
-});
 
 
  

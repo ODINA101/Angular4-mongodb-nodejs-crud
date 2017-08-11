@@ -18,9 +18,9 @@
  <div class="alert alert-danger">
  <div class="row">
   <div class="col-7">
-  <li class="list-group-item">{{i}}</li>
+  <li class="list-group-item">{{i.todo}}</li>
   </div><div class="col-3">
-  <button class="btn btn-success pull-right">delete</button>
+  <button class="btn btn-success pull-right" (click)="del(i.id,i.todo)">delete</button>
   </div></div>
   </div>
 </ul>

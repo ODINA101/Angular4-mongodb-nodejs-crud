@@ -23,26 +23,34 @@ constructor(public http:Http){
 this.http.get('http://localhost:3000/todos')
 .map(res => res.json())
 .subscribe(res => {
-console.log(res.todo);
+console.log(res);
 
-for(let key in res) {
-  
-  this.items.push(res[key]);
-}	
-console.log(this.items);
-
+ 	
+this.items = res;
 
 });
 
 
+this.socket.on('deleted',()=>{
+this.http.get('http://localhost:3000/todos')
+.map(res => res.json())
+.subscribe(res => {
+console.log(res);
 
+ 	
+this.items = res;
+
+});	
+});
 
  
 
 }
 
 textfield = "";
-
+del(id,todo) {
+	this.socket.emit('delete',{id:id,todo:todo});
+}
 
  check() {
  	if(this.textfield == "") {
